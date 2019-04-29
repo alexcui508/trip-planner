@@ -1,41 +1,33 @@
 import React from 'react';
 import DayCard from './DayCard';
-import EventData from './data/EventData';
 import { Header, Icon } from 'semantic-ui-react';
 
 class Calendar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      groups: {}
-    };
-  }
-
   groupEvents() {
-    let events = EventData.events;
-    let sortedEvents = events.sort((event1, event2) => { return event1.eventDate.getTime() - event2.eventDate.getTime() });
+    let events = this.props.selected;
+    let sortedEvents = events.sort((event1, event2) => { return event1.date.getTime() - event2.date.getTime() });
+    let initial = {};
     for (let i = 0; i < sortedEvents.length; i++) {
-      let event = sortedEvents[i];
-      this.state.groups[event.eventDate.toDateString()] = [];
+      let eventDate = sortedEvents[i].date.toDateString();
+      initial[eventDate] = [];
     }
     for (let i = 0; i < sortedEvents.length; i++) {
       let event = sortedEvents[i];
-      this.state.groups[event.eventDate.toDateString()].push(event);
+      let eventDate = event.date.toDateString();
+      initial[eventDate].push(event);
     }
-    let groupedEvents = Object.values(this.state.groups);
-    return groupedEvents;
+    return initial;
   }
 
   render() {
-    let groupedEvents = this.groupEvents();
+    let groupedEvents = Object.values(this.groupEvents());
     let renderedDays = [];
     for (let i = 0; i < groupedEvents.length; i++) {
       let eventGroup = groupedEvents[i];
-      renderedDays.push(<DayCard events={eventGroup} eventsDate={Object.keys(this.state.groups)[i]} />);
+      renderedDays.push(<DayCard events={eventGroup} eventsDate={Object.keys(this.groupEvents())[i]} />);
     }
     return (
         <div>
-          <br></br>
           <Header as='h1'>
             <Icon name='calendar alternate outline' />
             <Header.Content>

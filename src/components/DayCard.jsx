@@ -19,8 +19,9 @@ class DayCard extends React.Component {
   }
 
   render() {
-    let renderedEvents = this.props.events.map((event) => <ul><EventCard eventName={event.eventName}
-      eventDescription={event.eventDescription} eventPrice={event.eventPrice} eventRating={event.eventRating} /></ul>);
+    let renderedEvents = this.props.events.map((event) => <ul><EventCard eventName={event.business.name}
+      eventPhone={event.business.phone} eventPrice={event.business.price} eventRating={event.business.rating} 
+      eventID={event.business.id} /></ul>);
     const { activeIndex } = this.state;
     return (
       <Accordion fluid styled>
