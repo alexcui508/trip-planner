@@ -28,7 +28,7 @@ class Planner extends React.Component {
       <Grid columns={2} divided>
         <Grid.Row>
           <Grid.Column>
-            <Calendar />
+            <Calendar selected={this.state.selectedEvents}/>
           </Grid.Column>
           <Grid.Column>
             <Search dates={DATES} location={LOCATION} addBusiness={this.addBusinessToPlanner}/>
