@@ -22,9 +22,14 @@ class SearchResultCard extends React.Component {
             </Grid.Column>
             <Grid.Column width={10}>
               <h3>{business.name}</h3>
-              <div style={{ float: "left" }}>
+              <div style={{ float: "left", width:"50%" }}>
                 <b>{business.price}</b><br />
                 <span>{business.categories.map(v => v.title).join(", ")}</span> <br />
+                <div style={{ position: "absolute", bottom: '0', width:"50%"}}>
+                {business.display_phone} <br />
+                {business.location.display_address}
+                <br /><br />
+                </div>
               </div>
               <div style={{ float: "right" }}>
                 <b>{business.rating}/5 </b><br />
@@ -45,11 +50,7 @@ class SearchResultCard extends React.Component {
                 </Button>
               </div>
               <br />
-              <div style={{ position: "absolute", bottom: '0' }}>
-                {business.display_phone} <br />
-                {business.location.display_address}
-                <br /><br />
-              </div>
+             
               <br />
 
             </Grid.Column>
