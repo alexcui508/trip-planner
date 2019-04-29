@@ -40,7 +40,7 @@ class Planner extends React.Component {
         <Route path="/plan" render={() => (<Grid columns={2} divided>
           <Grid.Row>
             <Grid.Column>
-              <Calendar />
+              <Calendar selected={this.state.selectedEvents}/>
             </Grid.Column>
             <Grid.Column>
               <Search dates={this.state.dates} location={this.state.location} addBusiness={this.addBusinessToPlanner} />
