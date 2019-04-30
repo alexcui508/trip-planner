@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Modal, Image, Icon, Divider, Header, List } from 'semantic-ui-react';
+import Map from './Map';
 
 class BusinessDetail extends React.Component {
   constructor(props) {
@@ -24,11 +25,11 @@ class BusinessDetail extends React.Component {
   getAddress() {
     let full_address = this.props.details.location.display_address;
     let address = [];
-    for (let i = 0; i < full_address.length-1; i++) {
+    for (let i = 0; i < full_address.length - 1; i++) {
       address.push(full_address[i]);
       address.push(", ");
     }
-    address.push(full_address[full_address.length-1]);
+    address.push(full_address[full_address.length - 1]);
     return address;
   }
 
@@ -44,11 +45,19 @@ class BusinessDetail extends React.Component {
     return titles;
   }
 
-  /* getHours() {
-    let hours = this.props.details.hours.open;
-    for () {
+  /* convert24(time) {
+
+  }
+
+  getHours() {
+    let days = {0:"Monday", 1:"Tuesday", 2:"Wednesday", 3:"Thursday", 4:"Friday", 5:"Saturday", 6:"Sunday"};
+    let open_hours = this.props.details.hours.open;
+    let schedule = [];
+    for (let i = 0; i < open_hours.length; i++) {
+      let open_hour = open_hours[i];
 
     }
+    return schedule;
   } */
 
   render() {
@@ -82,6 +91,7 @@ class BusinessDetail extends React.Component {
               <List.Item><List.Header>Price</List.Header>{this.props.price}</List.Item>
               <List.Item><List.Header>Rating</List.Header>{this.props.rating}</List.Item>
             </List>
+            <Map latitude={this.props.details.coordinates.latitude} longitude={this.props.details.coordinates.longitude} />
           </Grid.Column>
         </Grid.Row>
       </Grid>
