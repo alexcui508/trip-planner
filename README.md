@@ -1,68 +1,30 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React Project: Trip Planner
 
-## Available Scripts
+**Team members:** Stanley Huang, Alex Cui
 
-In the project directory, you can run:
+**Demo Link:**
 
-### `npm start`
+**Prompt:** Make your own
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Abstract 
+Our project is a trip planner that allows the user to search points of interest in their destination using the Yelp Fusion API and add those points of interest as events on a calender of days. This project was made entirely in React, with help from Yelp API, the Semantic UI React npm package, and the react-router package. 
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Component
+* **Planner:** Top level component. Switches views from the StartMenu to the Calender/Search using React Router
 
-### `npm test`
+* **StartMenu:** Represents the Start Menu. Simply has a form for user input for date range and location. Saves results to state.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* **Search:** Represents the "Search Panel" on the right. This is where the Yelp API Calls are made and processed as result cards below.
+* **SearchResultCard:** Represents a single search result card that shows basic information about a specific business. Contains a form that allows for the user to add that business to their calender.
+* **Calendar:** Respresents the calendar left panel of the trip planner. Takes the selections from the search panel and renders them under the appriopriate date.
+* **DayCard:** Represents each day section of the Calendar
+* **EventCard:** Represents each event in the DayCard
+* **BusinessDetail:** Content that shows up when EventCard is clicked. Calls an api endpoint that gives more details for the business.
 
-### `npm run build`
+## Features
+* Users can look up businesses based on search terms and our app spits out the top 20 results. For each result, we give basic information about the business, its rating and a photo.
+* Users can add each business to the calendar on the left for a specific date to scheduale their trip.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Division of Labor
+* Stanley: Planner, Search, SearchResultCard, StartMenu
+* Alex: Calendar, DayCard, EventCard, BusinessDetail
