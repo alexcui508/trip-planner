@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/trip-planner/static/css/main.795991f2.chunk.css",
+    "main.js": "/trip-planner/static/js/main.f881f07a.chunk.js",
+    "main.js.map": "/trip-planner/static/js/main.f881f07a.chunk.js.map",
+    "runtime~main.js": "/trip-planner/static/js/runtime~main.97502f5e.js",
+    "runtime~main.js.map": "/trip-planner/static/js/runtime~main.97502f5e.js.map",
+    "static/css/2.0ed265e4.chunk.css": "/trip-planner/static/css/2.0ed265e4.chunk.css",
+    "static/js/2.49ff5e26.chunk.js": "/trip-planner/static/js/2.49ff5e26.chunk.js",
+    "static/js/2.49ff5e26.chunk.js.map": "/trip-planner/static/js/2.49ff5e26.chunk.js.map",
+    "index.html": "/trip-planner/index.html",
+    "precache-manifest.c51827ccdfda5ea346cd6d8cc1314bc1.js": "/trip-planner/precache-manifest.c51827ccdfda5ea346cd6d8cc1314bc1.js",
+    "service-worker.js": "/trip-planner/service-worker.js",
+    "static/css/2.0ed265e4.chunk.css.map": "/trip-planner/static/css/2.0ed265e4.chunk.css.map",
+    "static/css/main.795991f2.chunk.css.map": "/trip-planner/static/css/main.795991f2.chunk.css.map"
+  }
+}
