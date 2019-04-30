@@ -2,7 +2,7 @@
 
 **Team members:** Stanley Huang, Alex Cui
 
-**Demo Link:**
+**Demo Link:** https://alexcui508.github.io/trip-planner/
 
 **Prompt:** Make your own
 

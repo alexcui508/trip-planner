@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 import Search from './Search';
 import { Grid } from 'semantic-ui-react'
 import StartMenu from './StartMenu';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
 
 let DATES = [new Date("2019-12-16"), new Date("2019-12-17"), new Date("2019-12-18")];
