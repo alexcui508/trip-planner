@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, Segment, Icon } from 'semantic-ui-react';
+import { Modal, Segment, Icon, Container } from 'semantic-ui-react';
+import BusinessDetail from './BusinessDetail';
 
 let REACT_APP_YELP_API_KEY = '1oVKZrEwzseUCh8sk57ORW4vBLSPDpk7tMDgrLSzsBVQ554QHwHKoghKGRNLhiVTajkH3zD8vuxepiWhu9GMCwglYwZqUiYlGrR9__0DMsVxEuTyL1iITpqI8qHGXHYx';
 
@@ -9,6 +10,7 @@ class EventCard extends React.Component {
     this.searchHandler = this.searchHandler.bind(this);
     this.state = {
       details: [],
+      loading: false,
     };
   }
 
@@ -18,6 +20,9 @@ class EventCard extends React.Component {
 
   searchHandler(event) {
     let id = this.props.eventID;
+    this.setState({
+      loading: true,
+    });
     fetch(this.yelp_detailed_url(id), {
       method: 'GET',
       headers: {
@@ -29,10 +34,13 @@ class EventCard extends React.Component {
       .then(data => {
         this.setState({
           details: data,
-        }, () => {console.log(this.state)});
+        }, () => {this.setState({
+          loading: false,
+        })});
       });
   }
 
+  
   convertRating() {
     let renderedStars = [];
     let numStars = this.props.eventRating;
@@ -42,11 +50,11 @@ class EventCard extends React.Component {
       addHalf = true;
     }
     while (numStars > 0) {
-      renderedStars.push(<Icon name='star' />);
+      renderedStars.push(<Icon name='star' color='yellow' />);
       numStars -= 1;
     }
     if (addHalf) {
-      renderedStars.push(<Icon name='star half' />);
+      renderedStars.push(<Icon name='star half' color='yellow' />);
     }
 
     return renderedStars
@@ -57,14 +65,12 @@ class EventCard extends React.Component {
     return (
       <Modal trigger={<Segment.Group horizontal onClick={this.searchHandler}> 
                         <Segment>{this.props.eventName}</Segment>
-                        <Segment style={{color: "green"}}>{this.props.eventPrice}</Segment> 
-                        <Segment style={{color: "gold"}}>{renderedStars}</Segment>
+                        <Segment style={{color:'green'}}>{this.props.eventPrice}</Segment> 
+                        <Segment>{renderedStars}</Segment>
                       </Segment.Group>}>
-        <Modal.Header>{this.props.eventName}</Modal.Header>
+        <Modal.Header>{this.props.eventsDate}</Modal.Header>
         <Modal.Content>
-          <p>Phone: {this.props.eventPhone}</p>
-          <p>Price: {this.props.eventPrice}</p>
-          <p>Rating: {this.props.eventRating}</p>
+          <BusinessDetail loading={this.state.loading} details={this.state.details} price={<Container style={{color:'green'}}>{this.props.eventPrice}</Container> } rating={renderedStars} />
         </Modal.Content>
       </Modal>
     );
