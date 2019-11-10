@@ -1,6 +1,7 @@
 import React from 'react';
 import DayCard from './DayCard';
 import { Header, Icon } from 'semantic-ui-react';
+import Timeline from 'react-timeline-semantic-ui';
 
 class Calendar extends React.Component {
   groupEvents() {

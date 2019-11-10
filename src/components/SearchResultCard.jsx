@@ -1,4 +1,4 @@
-import { Segment, Grid, Image, Button, Icon, Dropdown } from 'semantic-ui-react';
+import { Segment, Grid, Image, Button, Icon, Dropdown, Placeholder } from 'semantic-ui-react';
 import React from 'react';
 
 class SearchResultCard extends React.Component {
@@ -23,8 +23,12 @@ class SearchResultCard extends React.Component {
             <Grid.Column width={10}>
               <h3>{business.name}</h3>
               <div style={{ float: "left", width:"50%" }}>
-                <b>{business.price}</b><br />
                 <span>{business.categories.map(v => v.title).join(", ")}</span> <br />
+                {business.price && 
+                  <>
+                    <b style={{color: "green"}}>{business.price}</b><br/>
+                  </>
+                }
                 <div style={{ position: "absolute", bottom: '0', width:"50%"}}>
                 {business.display_phone} <br />
                 {business.location.display_address}
@@ -43,10 +47,9 @@ class SearchResultCard extends React.Component {
                   style={{ marginBottom: "5px" }}
                   onChange={(e, data) => {this.setState({dateIndex: data.value, disable: false})}}
                 />
-                <Button primary disabled={this.state.disable} onClick={this.handleSelect}>
-                  <Button.Content>
-                    <Icon name="add"></Icon>
-                  </Button.Content>
+                <Button primary icon labelPosition="right" disabled={this.state.disable} onClick={this.handleSelect}>
+                  Add to plan
+                  <Icon name="add"></Icon>
                 </Button>
               </div>
               <br />

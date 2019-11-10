@@ -3,10 +3,6 @@ import { Grid, Modal, Image, Icon, Divider, Header, List } from 'semantic-ui-rea
 import Map from './Map';
 
 class BusinessDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   getPhotos() {
     let photos = this.props.details.photos;
     let renderedPhotos = photos.map((photo) =>
