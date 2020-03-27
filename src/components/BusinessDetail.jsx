@@ -41,21 +41,6 @@ class BusinessDetail extends React.Component {
     return titles;
   }
 
-  /* convert24(time) {
-
-  }
-
-  getHours() {
-    let days = {0:"Monday", 1:"Tuesday", 2:"Wednesday", 3:"Thursday", 4:"Friday", 5:"Saturday", 6:"Sunday"};
-    let open_hours = this.props.details.hours.open;
-    let schedule = [];
-    for (let i = 0; i < open_hours.length; i++) {
-      let open_hour = open_hours[i];
-
-    }
-    return schedule;
-  } */
-
   render() {
     if (this.props.loading) {
       return <Icon loading name='circle notched' />
