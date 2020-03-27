@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 import Search from './Search';
 import { Grid } from 'semantic-ui-react'
 import StartMenu from './StartMenu';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { HashRouter as Router, Route } from "react-router-dom";
 
 class Planner extends React.Component {
   constructor(props) {
