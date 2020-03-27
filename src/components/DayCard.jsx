@@ -1,10 +1,16 @@
 import React from 'react';
-import { Accordion, Icon, Label, Grid} from 'semantic-ui-react';
+import { 
+  Accordion, 
+  Icon, 
+  Label, 
+  Grid, 
+} from 'semantic-ui-react';
 import EventCard from './EventCard';
 
 class DayCard extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       activeIndex: 0
     };
@@ -18,32 +24,55 @@ class DayCard extends React.Component {
     this.setState({ activeIndex: newIndex })
   }
 
+  getRenderedEvents = () => {
+    const { eventsWithTimes, eventDate, deleteSelectedEvent } = this.props;
+
+    var renderedEvents = [];
+
+    const sortedEventsWithTimes = {};
+    Object.keys(eventsWithTimes).sort((time1, time2) => {
+      return new Date('1970/01/01 ' + time1) - new Date('1970/01/01 ' + time2);
+    }).forEach((key) => {
+      sortedEventsWithTimes[key] = eventsWithTimes[key];
+    });
+
+    for (const eventTime in sortedEventsWithTimes) {
+      const event = sortedEventsWithTimes[eventTime];
+      renderedEvents.push(<EventCard eventDate={eventDate} eventInfo={event.business} eventTime={eventTime} deleteSelectedEvent={deleteSelectedEvent} />);
+    }
+
+    return renderedEvents;
+  }
+
   render() {
-    let renderedEvents = this.props.events.map((event) => <ul><EventCard eventsDate={this.props.eventsDate} eventName={event.business.name}
-      eventPhone={event.business.phone} eventPrice={event.business.price} eventRating={event.business.rating} 
-      eventID={event.business.id} /></ul>);
     const { activeIndex } = this.state;
+    const { eventDate } = this.props;
+
+    const renderedEvents = this.getRenderedEvents();
+
     return (
-      <Accordion fluid styled>
+      <Accordion>
         <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
-        <Grid>
-          <Grid.Row>
-          <Icon name='dropdown' />
-          {this.props.eventsDate}
-            <Grid.Column floated='left'> 
-            </Grid.Column>
-            <Grid.Column floated='right'>
-              <Label circular color="blue">
-                {renderedEvents.length}
-              </Label>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+          <Label.Group size="big">
+            <Label> 
+              <Icon name="dropdown"/>
+              {eventDate}
+            </Label>
+            <Label color="teal">
+              {renderedEvents.length}
+            </Label>
+          </Label.Group>
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 0}>
-          <p>
-            {renderedEvents}
-          </p>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={1}>
+              </Grid.Column>
+              <Grid.Column width={15}>
+                {renderedEvents}  
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Accordion.Content>
       </Accordion>
     );

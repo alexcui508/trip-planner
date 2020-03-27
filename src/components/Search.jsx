@@ -1,5 +1,4 @@
 import React from 'react';
-import Geosuggest from 'react-geosuggest';
 import { 
   Input, 
   Container, 
@@ -7,25 +6,21 @@ import {
   Grid, 
   Divider, 
   Header, 
-  Icon, 
   Placeholder, 
   Segment, 
   Dimmer, 
   Loader,
-  Form,
-  Modal,
 } from 'semantic-ui-react';
-import SearchResultCard from "./SearchResultCard";
+import SearchResultCard from './SearchResultCard';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.searchHandler = this.searchHandler.bind(this);
+
     this.state = { 
       query: '', 
       results: [],
       loading: false,
-      settingsModalOpen: false,
     };
   }
 
@@ -39,7 +34,7 @@ class Search extends React.Component {
   }
 
   searchHandler = (event) => {
-    const { query, loading } = this.state;
+    const { query } = this.state;
     this.setState({
       loading: true,
     }, () => {
@@ -92,16 +87,8 @@ class Search extends React.Component {
     return cards;
   }
 
-  saveSettings = () => {
-    return 
-  }
-
-  stripLocationName = (location) => {
-    return location.split(',')[0];
-  }
-
   render() {
-    const { query, results, loading, settingsModalOpen } = this.state;
+    const { query, results, loading } = this.state;
     const { dates, addBusiness } = this.props;
 
     const RESULTS_HEIGHT = (window.innerHeight - 68).toString() + 'px';
@@ -109,12 +96,16 @@ class Search extends React.Component {
     const location = this.getSelectedLocation();
 
     return (
-      <Container >
+      <Container>
         <div style={{ marginTop: '20px', marginBottom: '10px' }}>
-          <Header size="large">
-            Things to do around {location.name}
-          </Header>
           <Grid columns="equal">
+            <Grid.Row>
+              <Grid.Column width={12}>
+                <Header size="huge">
+                  Things to do around {location.name}
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
             <Grid.Row>
               <Grid.Column>
                 <Input 
@@ -151,31 +142,6 @@ class Search extends React.Component {
                     onClick={this.clearResults}
                   />
                 }
-                <Modal trigger={
-                  <Button 
-                    style={{ marginRight: '10px', marginTop: '10px' }}
-                    color="teal"
-                    floated="right"
-                    icon="setting"
-                  />
-                }>
-                  <Modal.Header>Settings</Modal.Header>
-                  <Modal.Content>
-                  <Form size="large">
-                    <Geosuggest onSuggestSelect={selected => {
-                      if (selected) {
-                        this.setState({
-                          location: {
-                            lat: selected.location.lat, 
-                            lon: selected.location.lng,
-                            name: this.stripLocationName(selected.label),
-                          }
-                        })
-                      }
-                    }}/>
-                    </Form>
-                  </Modal.Content>
-                </Modal>
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -183,13 +149,13 @@ class Search extends React.Component {
         <Divider fitted />
         {loading && renderedLoadingResults}
         {results && results[0] && 
-           <Container style={{ overflow: 'auto', maxHeight: RESULTS_HEIGHT, paddingTop: '10px', paddingBottom: '10px' }}>
-          <Container>
-            {results.map((value, i) => (
-              <SearchResultCard key={i.toString()} business={value} dates={dates} addBusiness={addBusiness} />
-            ))}
+          <Container style={{ overflow: 'auto', maxHeight: RESULTS_HEIGHT, paddingTop: '10px', paddingBottom: '10px' }}>
+            <Container>
+              {results.map((value, i) => (
+                <SearchResultCard key={i.toString()} business={value} dates={dates} addBusiness={addBusiness} />
+              ))}
+            </Container>
           </Container>
-        </Container>
         }
       </Container>
     )

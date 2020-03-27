@@ -1,18 +1,61 @@
-import { Segment, Grid, Image, Button, Icon, Dropdown, Placeholder } from 'semantic-ui-react';
 import React from 'react';
+import { 
+  Segment, 
+  Grid, 
+  Image, 
+  Button, 
+  Icon, 
+  Dropdown, 
+} from 'semantic-ui-react';
+import { TimeInput } from 'semantic-ui-calendar-react';
 
 class SearchResultCard extends React.Component {
   constructor(props) {
     super(props);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.state = {dateIndex: -1, disable: true}
+
+    this.state = {
+      dateIndex: -1, 
+      time: '',
+    }
   }
-  handleSelect(e) {
-    this.props.addBusiness(this.props.business, this.props.dates[this.state.dateIndex]);
+
+  handleSelect = (e) => {
+    const { dateIndex, time } = this.state;
+    const { addBusiness, business, dates } = this.props;
+
+    addBusiness(business, dates[dateIndex], time);
   }
+
+  convertRating = () => {
+    const { business } = this.props;
+
+    var renderedStars = [];
+    var numStars = business.rating;
+    var addHalf = false;
+
+    if (!Number.isInteger(numStars)) {
+      numStars -= 0.5;
+      addHalf = true;
+    }
+
+    for (let i = 0; i < numStars; i++) {
+      renderedStars.push(<Icon name='star' color='yellow' />);
+    }
+
+    if (addHalf) {
+      renderedStars.push(<Icon name='star half' color='yellow' />);
+    }
+
+    return renderedStars;
+  }
+
   render() {
-    let business = this.props.business;
-    let dates = this.props.dates.map(d => d.toLocaleDateString());
+    const { time, dateIndex } = this.state;
+    const { business, dates } = this.props;
+
+    const localeDates = dates.map(d => d.toLocaleDateString());
+    const renderedStars = this.convertRating();
+
     return (
       <Segment raised style={{ marginRight: '10px' }}>
         <Grid celled>
@@ -27,39 +70,46 @@ class SearchResultCard extends React.Component {
                 {business.price && 
                   <>
                     <b style={{color: "green"}}>{business.price}</b><br/>
+                    {renderedStars}
                   </>
                 }
                 <div style={{ position: "absolute", bottom: '0', width:"50%"}}>
                 {business.display_phone} <br />
-                {business.location.display_address}
+                {business.location.display_address.join(", ")}
                 <br /><br />
                 </div>
               </div>
               <div style={{ float: "right" }}>
-                <b>{business.rating}/5 </b><br />
-                {business.review_count} reviews <br />
+                {business.review_count} reviews 
+                <br />
                 <br />
                 <Dropdown
                   placeholder='Select Date'
                   fluid
                   selection
-                  options={dates.map((v, i) => ({ key: business.id + v, text: v, value: i }))}
+                  options={localeDates.map((v, i) => ({ key: business.id + v, text: v, value: i }))}
                   style={{ marginBottom: "5px" }}
-                  onChange={(e, data) => {this.setState({dateIndex: data.value, disable: false})}}
+                  onChange={(e, data) => this.setState({ dateIndex: data.value })}
                 />
-                <Button primary icon labelPosition="right" disabled={this.state.disable} onClick={this.handleSelect}>
+                <TimeInput 
+                  name="time"
+                  value={time}
+                  onChange={(e, data) => this.setState({ time: data.value })}
+                  clearable
+                  onClear={() => {this.setState({ time: '' })}}
+                  timeFormat="AMPM"
+                  icon={false}
+                  placeholder="Select Time"
+                  style={{ marginBottom: "5px" }}
+                />
+                <Button icon color="teal" labelPosition="right" disabled={dateIndex === -1 || time === ''} onClick={this.handleSelect}>
                   Add to plan
                   <Icon name="add"></Icon>
                 </Button>
               </div>
-              <br />
-             
-              <br />
-
             </Grid.Column>
           </Grid.Row>
         </Grid>
-
       </Segment>
     )
   }

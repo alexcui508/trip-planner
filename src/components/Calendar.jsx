@@ -1,44 +1,94 @@
 import React from 'react';
 import DayCard from './DayCard';
-import { Header, Icon } from 'semantic-ui-react';
-import Timeline from 'react-timeline-semantic-ui';
+import { 
+  Header, 
+  Container,
+  Grid,
+  Divider,
+} from 'semantic-ui-react';
 
 class Calendar extends React.Component {
-  groupEvents() {
-    let events = this.props.selected;
-    let sortedEvents = events.sort((event1, event2) => { return event1.date.getTime() - event2.date.getTime() });
-    let initial = {};
-    for (let i = 0; i < sortedEvents.length; i++) {
-      let eventDate = sortedEvents[i].date.toDateString();
-      initial[eventDate] = [];
-    }
-    for (let i = 0; i < sortedEvents.length; i++) {
-      let event = sortedEvents[i];
+  groupEvents = () => {
+    const { selected } = this.props;
+
+    const sortedEvents = selected.sort((event1, event2) => { return event1.date.getTime() - event2.date.getTime() });
+
+    var groupedEvents = {};
+
+    sortedEvents.forEach((event) => {
       let eventDate = event.date.toDateString();
-      initial[eventDate].push(event);
+      groupedEvents[eventDate] = {};
+    }); 
+
+    sortedEvents.forEach((event) => {
+      let eventDate = event.date.toDateString();
+      groupedEvents[eventDate][event.time] = event;
+    });
+
+    return groupedEvents;
+  }
+
+  getRenderedDays = () => {
+    var renderedDays = [];
+    const groupedEvents = this.groupEvents();
+
+    for (const eventDate in groupedEvents) {
+      const eventsWithTimes = groupedEvents[eventDate];
+      renderedDays.push(<DayCard eventsWithTimes={eventsWithTimes} eventDate={eventDate} deleteSelectedEvent={this.props.deleteSelectedEvent} />);
     }
-    return initial;
+
+    return renderedDays;
+  }
+
+  getTimeRange = () => {
+    const { dates } = this.props;
+    
+    const startDate = dates[0];
+    const endDate = dates[dates.length - 1];
+
+    return {
+      start: startDate.toDateString(),
+      end: endDate.toDateString(),
+    }
   }
 
   render() {
-    let groupedEvents = Object.values(this.groupEvents());
-    let renderedDays = [];
-    for (let i = 0; i < groupedEvents.length; i++) {
-      let eventGroup = groupedEvents[i];
-      renderedDays.push(<DayCard events={eventGroup} eventsDate={Object.keys(this.groupEvents())[i]} />);
-    }
+    const renderedDays = this.getRenderedDays();
+    const timeRange = this.getTimeRange();
+    const RESULTS_HEIGHT = (window.innerHeight - 68).toString() + 'px';
+
     return (
-        <div>
-          <Header as='h1'>
-            <Icon name='calendar alternate outline' />
-            <Header.Content>
-              Calendar
-        <Header.Subheader>Plan your trip</Header.Subheader>
-            </Header.Content>
-          </Header>
-          <br></br>
-          {renderedDays}
+      <Container>
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <Grid container>
+            <Grid.Row>
+              <Grid.Column>
+                <Header size="huge">Your Itinerary</Header>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <Header size="small">Start Date</Header> 
+                    </Grid.Column>
+                    <Grid.Column width={14} style={{marginBottom: '10px'}}>
+                      <Header size="small" color="grey">{timeRange.start}</Header>
+                    </Grid.Column>
+                    <Grid.Column width={2}>
+                      <Header size="small">End Date</Header> 
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <Header size="small" color="grey">{timeRange.end}</Header>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </div>
+        <Divider fitted />
+        <Container style={{ 'overflowY': 'auto', 'overflowX': 'hidden', height: RESULTS_HEIGHT, paddingLeft: '20px'}}>
+          {renderedDays}
+        </Container>
+      </Container>
     );
   }
 }

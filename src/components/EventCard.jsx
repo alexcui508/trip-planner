@@ -1,58 +1,69 @@
 import React from 'react';
-import { Modal, Segment, Icon, Container } from 'semantic-ui-react';
+import { 
+  Modal, 
+  Icon, 
+  Container,
+  Segment,
+  Header,
+  Divider,
+  Grid,
+} from 'semantic-ui-react';
 import BusinessDetail from './BusinessDetail';
-
-let REACT_APP_YELP_API_KEY = '1oVKZrEwzseUCh8sk57ORW4vBLSPDpk7tMDgrLSzsBVQ554QHwHKoghKGRNLhiVTajkH3zD8vuxepiWhu9GMCwglYwZqUiYlGrR9__0DMsVxEuTyL1iITpqI8qHGXHYx';
 
 class EventCard extends React.Component {
   constructor(props) {
     super(props);
-    this.searchHandler = this.searchHandler.bind(this);
+
     this.state = {
       details: [],
       loading: false,
+      isHovered: false,
     };
   }
 
-  yelp_detailed_url(id) {
+  getYelpDetailedUrl = (id) => {
     return "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/" + id;
   }
 
-  searchHandler(event) {
-    let id = this.props.eventID;
+  searchHandler = () => {
+    const { eventInfo } = this.props;
+
     this.setState({
       loading: true,
+    }, () => {
+      fetch(this.getYelpDetailedUrl(eventInfo.id), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          Authorization: 'Bearer ' + process.env.REACT_APP_YELP_API_KEY
+        }
+      }).then(response => response.json())
+        .then(data => {
+          this.setState({
+            details: data,
+            loading: false,
+          });
+        });
     });
-    fetch(this.yelp_detailed_url(id), {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        Authorization: 'Bearer ' + REACT_APP_YELP_API_KEY
-      }
-    }).then(response => response.json())
-      .then(data => {
-        this.setState({
-          details: data,
-        }, () => {this.setState({
-          loading: false,
-        })});
-      });
   }
 
-  
-  convertRating() {
-    let renderedStars = [];
-    let numStars = this.props.eventRating;
-    let addHalf = false;
+  convertRating = () => {
+    const { eventInfo } = this.props;
+
+    var renderedStars = [];
+    var numStars = eventInfo.rating;
+    var addHalf = false;
+
     if (!Number.isInteger(numStars)) {
       numStars -= 0.5;
       addHalf = true;
     }
-    while (numStars > 0) {
+
+    for (let i = 0; i < numStars; i++) {
       renderedStars.push(<Icon name='star' color='yellow' />);
-      numStars -= 1;
     }
+
     if (addHalf) {
       renderedStars.push(<Icon name='star half' color='yellow' />);
     }
@@ -60,19 +71,69 @@ class EventCard extends React.Component {
     return renderedStars
   }
 
-  render() {
-    let renderedStars = this.convertRating();
+  getRenderedEventCard = () => {
+    const { isHovered } = this.state;
+    const { eventInfo } = this.props;
+
     return (
-      <Modal trigger={<Segment.Group horizontal onClick={this.searchHandler}> 
-                        <Segment>{this.props.eventName}</Segment>
-                        <Segment style={{color:'green'}}>{this.props.eventPrice}</Segment> 
-                        <Segment>{renderedStars}</Segment>
-                      </Segment.Group>}>
-        <Modal.Header>{this.props.eventsDate}</Modal.Header>
-        <Modal.Content>
-          <BusinessDetail loading={this.state.loading} details={this.state.details} price={<Container style={{color:'green'}}>{this.props.eventPrice}</Container> } rating={renderedStars} />
-        </Modal.Content>
-      </Modal>
+      <Segment attached color="teal" secondary={isHovered}>
+        <Header as='h2'>
+          {eventInfo.name}
+          <Divider hidden/>
+          <Header.Subheader>{eventInfo.categories.map(v => v.title).join(", ")}</Header.Subheader>
+          <Header.Subheader>{eventInfo.location.display_address.join(", ")}</Header.Subheader>
+          <Header.Subheader>{eventInfo.display_phone}</Header.Subheader>
+        </Header>
+      </Segment>
+    );
+  }
+
+  render() {
+    const { loading, details } = this.state;
+    const { eventInfo, eventDate, eventTime, deleteSelectedEvent } = this.props;
+
+    const renderedStars = this.convertRating();
+    const renderedEventCard = this.getRenderedEventCard();
+
+    return (
+      <>
+        <div style={{ marginRight: '10px' }}>
+          <Header as='h1' attached='top'>
+            <Grid columns="equal">
+              <Grid.Row>
+                <Grid.Column>{eventTime}</Grid.Column>
+                <Grid.Column textAlign="right" style={{marginRight: '-10px'}}>
+                  <Icon link name="delete" color="red" onClick={() => {deleteSelectedEvent(eventDate, eventTime)}}/>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Header>
+        </div>
+        <Modal trigger={
+          <div 
+            style={{ marginBottom: '20px', marginRight: '10px' }} 
+            onClick={this.searchHandler} 
+            onMouseEnter={() => this.setState({ isHovered: true })}
+            onMouseLeave={() => this.setState({ isHovered: false })}
+          >
+            {renderedEventCard}
+          </div>
+        }>
+          <Modal.Header>{eventDate}, {eventTime}</Modal.Header>
+          <Modal.Content>
+            <BusinessDetail 
+              loading={loading} 
+              details={details} 
+              price={
+                <Container style={{color:'green'}}>
+                  {eventInfo.price}
+                </Container>
+              } 
+              rating={renderedStars}
+            />
+          </Modal.Content>
+        </Modal>
+      </>
     );
   }
 }

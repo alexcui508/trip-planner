@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Grid, Button, Form, Header } from 'semantic-ui-react';
 import { DatesRangeInput } from 'semantic-ui-calendar-react';
 import Geosuggest from 'react-geosuggest';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BackgroundSlider from 'react-background-slider';
 import travel1 from '../images/travel1.jpg';
 import travel2 from '../images/travel2.jpg';
@@ -21,7 +21,6 @@ class StartMenu extends React.Component {
       dateCheck: true,
       placeCheck: true,
     }
-    this.handleStartPlan = this.handleStartPlan.bind(this);
   }
 
   handleChange = (event, { name, value }) => {

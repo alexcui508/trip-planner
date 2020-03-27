@@ -1,15 +1,14 @@
 import React from 'react';
 import Calendar from './Calendar';
 import Search from './Search';
-import { Grid, Divider } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import StartMenu from './StartMenu';
-import { HashRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class Planner extends React.Component {
   constructor(props) {
     super(props);
-    this.addBusinessToPlanner = this.addBusinessToPlanner.bind(this);
-    this.startPlan = this.startPlan.bind(this);
+
     this.state = {
       selectedEvents: [],
       location: {},
@@ -17,11 +16,30 @@ class Planner extends React.Component {
     }
   }
 
-  addBusinessToPlanner = (business, date) => {
+  addBusinessToPlanner = (business, date, time) => {
     const { selectedEvents } = this.state; 
     this.setState({
-      selectedEvents: [...selectedEvents, { business: business, date: date }],
+      selectedEvents: [...selectedEvents, { business: business, date: date, time: time }],
     });
+  }
+
+  deleteSelectedEvent = (eventDate, eventTime) => {
+    const { selectedEvents } = this.state; 
+    var selectedEventsCopy = [...selectedEvents];
+
+    var indexToRemove = -1;
+    selectedEventsCopy.forEach((selectedEvent, i) => {
+      if (selectedEvent.date.toDateString() === eventDate && selectedEvent.time === eventTime) {
+        indexToRemove = i;
+      }
+    });
+
+    if (indexToRemove > -1) {
+      selectedEventsCopy.splice(indexToRemove, 1);
+      this.setState({
+        selectedEvents: selectedEventsCopy,
+      });
+    }
   }
 
   startPlan = (location, dates) => {
@@ -30,6 +48,7 @@ class Planner extends React.Component {
 
   render() {
     const { selectedEvents, dates, location } = this.state; 
+
     return (
       <Router>
         <Route exact path="/" render={() => <StartMenu startPlan={this.startPlan} />}/>
@@ -37,7 +56,7 @@ class Planner extends React.Component {
           <Grid columns={2} divided style={{height: '100vh'}}>
             <Grid.Row>
               <Grid.Column>
-                <Calendar selected={selectedEvents}/>
+                <Calendar dates={dates} selected={selectedEvents} deleteSelectedEvent={this.deleteSelectedEvent}/>
               </Grid.Column>
               <Grid.Column>
                 <Search dates={dates} location={location} addBusiness={this.addBusinessToPlanner} />
