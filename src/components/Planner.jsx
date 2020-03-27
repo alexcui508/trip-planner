@@ -17,16 +17,33 @@ class Planner extends React.Component {
   }
 
   addBusinessToPlanner = (business, date, time) => {
-    const { selectedEvents } = this.state; 
-    this.setState({
-      selectedEvents: [...selectedEvents, { business: business, date: date, time: time }],
+    const { selectedEvents } = this.state;
+
+    const newBusiness = { business: business, date: date, time: time };
+    var existingElementIndex = -1;
+    selectedEvents.forEach((selectedEvent, i) => {
+      if (selectedEvent.date.toDateString() === date.toDateString() && selectedEvent.time === time) {
+        existingElementIndex = i;
+      }
     });
+
+    if (existingElementIndex > -1) {
+      var selectedEventsCopy = [...selectedEvents];
+      selectedEventsCopy[existingElementIndex] = newBusiness;
+      this.setState({
+        selectedEvents: selectedEventsCopy,
+      });
+    } else {
+      this.setState({
+        selectedEvents: [...selectedEvents, newBusiness],
+      });
+    }
   }
 
   deleteSelectedEvent = (eventDate, eventTime) => {
     const { selectedEvents } = this.state; 
-    var selectedEventsCopy = [...selectedEvents];
 
+    var selectedEventsCopy = [...selectedEvents];
     var indexToRemove = -1;
     selectedEventsCopy.forEach((selectedEvent, i) => {
       if (selectedEvent.date.toDateString() === eventDate && selectedEvent.time === eventTime) {
