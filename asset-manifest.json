@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/trip-planner/static/css/main.c6fe698a.chunk.css",
-    "main.js": "/trip-planner/static/js/main.ce46ee23.chunk.js",
-    "main.js.map": "/trip-planner/static/js/main.ce46ee23.chunk.js.map",
-    "runtime~main.js": "/trip-planner/static/js/runtime~main.97502f5e.js",
-    "runtime~main.js.map": "/trip-planner/static/js/runtime~main.97502f5e.js.map",
-    "static/css/2.4e45bcb1.chunk.css": "/trip-planner/static/css/2.4e45bcb1.chunk.css",
-    "static/js/2.7a39b43f.chunk.js": "/trip-planner/static/js/2.7a39b43f.chunk.js",
-    "static/js/2.7a39b43f.chunk.js.map": "/trip-planner/static/js/2.7a39b43f.chunk.js.map",
+    "main.js": "/trip-planner/static/js/main.6da65c33.chunk.js",
+    "main.js.map": "/trip-planner/static/js/main.6da65c33.chunk.js.map",
+    "runtime-main.js": "/trip-planner/static/js/runtime-main.14b35611.js",
+    "runtime-main.js.map": "/trip-planner/static/js/runtime-main.14b35611.js.map",
+    "static/css/2.0ed265e4.chunk.css": "/trip-planner/static/css/2.0ed265e4.chunk.css",
+    "static/js/2.74c92780.chunk.js": "/trip-planner/static/js/2.74c92780.chunk.js",
+    "static/js/2.74c92780.chunk.js.map": "/trip-planner/static/js/2.74c92780.chunk.js.map",
     "index.html": "/trip-planner/index.html",
-    "precache-manifest.885c36ec1867bc924b4ceded37e63247.js": "/trip-planner/precache-manifest.885c36ec1867bc924b4ceded37e63247.js",
+    "precache-manifest.5038f959a1ba9fb0a61d621af60f9d43.js": "/trip-planner/precache-manifest.5038f959a1ba9fb0a61d621af60f9d43.js",
     "service-worker.js": "/trip-planner/service-worker.js",
-    "static/css/2.4e45bcb1.chunk.css.map": "/trip-planner/static/css/2.4e45bcb1.chunk.css.map",
+    "static/css/2.0ed265e4.chunk.css.map": "/trip-planner/static/css/2.0ed265e4.chunk.css.map",
     "static/css/main.c6fe698a.chunk.css.map": "/trip-planner/static/css/main.c6fe698a.chunk.css.map",
-    "static/media/semantic.min.css": "/trip-planner/static/media/outline-icons.ef60a4f6.woff",
+    "static/js/2.74c92780.chunk.js.LICENSE.txt": "/trip-planner/static/js/2.74c92780.chunk.js.LICENSE.txt",
     "static/media/travel1.jpg": "/trip-planner/static/media/travel1.eda7aff3.jpg",
     "static/media/travel2.jpg": "/trip-planner/static/media/travel2.f85b1e62.jpg",
     "static/media/travel3.jpg": "/trip-planner/static/media/travel3.373599b5.jpg",
@@ -21,5 +21,12 @@
     "static/media/travel5.jpg": "/trip-planner/static/media/travel5.3b3c1978.jpg",
     "static/media/travel6.jpg": "/trip-planner/static/media/travel6.ca2510a6.jpg",
     "static/media/travel7.jpg": "/trip-planner/static/media/travel7.eba269f6.jpg"
-  }
+  },
+  "entrypoints": [
+    "static/js/runtime-main.14b35611.js",
+    "static/css/2.0ed265e4.chunk.css",
+    "static/js/2.74c92780.chunk.js",
+    "static/css/main.c6fe698a.chunk.css",
+    "static/js/main.6da65c33.chunk.js"
+  ]
 }
