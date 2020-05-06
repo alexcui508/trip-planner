@@ -1,5 +1,5 @@
 import React from 'react';
-import DayCard from './DayCard';
+import Day from './Day';
 import { 
   Header, 
   Container,
@@ -34,7 +34,7 @@ class Calendar extends React.Component {
 
     for (const eventDate in groupedEvents) {
       const eventsWithTimes = groupedEvents[eventDate];
-      renderedDays.push(<DayCard eventsWithTimes={eventsWithTimes} eventDate={eventDate} deleteSelectedEvent={this.props.deleteSelectedEvent} />);
+      renderedDays.push(<Day eventsWithTimes={eventsWithTimes} eventDate={eventDate} deleteSelectedEvent={this.props.deleteSelectedEvent} />);
     }
 
     return renderedDays;

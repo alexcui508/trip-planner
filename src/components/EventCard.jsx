@@ -5,7 +5,6 @@ import {
   Container,
   Segment,
   Header,
-  Divider,
   Grid,
 } from 'semantic-ui-react';
 import BusinessDetail from './BusinessDetail';
@@ -16,13 +15,18 @@ class EventCard extends React.Component {
 
     this.state = {
       details: [],
+      reviewData: [],
       loading: false,
       isHovered: false,
     };
   }
 
-  getYelpDetailedUrl = (id) => {
-    return "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/" + id;
+  getYelpDetailsUrl = (id) => {
+    return `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
+  }
+
+  getYelpReviewsUrl = (id) => {
+    return `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}/reviews`;
   }
 
   searchHandler = () => {
@@ -31,36 +35,50 @@ class EventCard extends React.Component {
     this.setState({
       loading: true,
     }, () => {
-      fetch(this.getYelpDetailedUrl(eventInfo.id), {
+      fetch(this.getYelpDetailsUrl(eventInfo.id), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
           Authorization: 'Bearer ' + process.env.REACT_APP_YELP_API_KEY
         }
-      }).then(response => response.json())
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          details: data,
+        });
+      })
+      .then(() => {
+        fetch(this.getYelpReviewsUrl(eventInfo.id), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            Authorization: 'Bearer ' + process.env.REACT_APP_YELP_API_KEY
+          }
+        })
+        .then(response => response.json())
         .then(data => {
           this.setState({
-            details: data,
+            reviewData: data,
             loading: false,
           });
         });
+      });
     });
   }
 
-  convertRating = () => {
-    const { eventInfo } = this.props;
-
+  convertRating = (rating) => {
     var renderedStars = [];
-    var numStars = eventInfo.rating;
     var addHalf = false;
 
-    if (!Number.isInteger(numStars)) {
-      numStars -= 0.5;
+    if (!Number.isInteger(rating)) {
+      rating -= 0.5;
       addHalf = true;
     }
 
-    for (let i = 0; i < numStars; i++) {
+    for (let i = 0; i < rating; i++) {
       renderedStars.push(<Icon name='star' color='yellow' />);
     }
 
@@ -79,7 +97,6 @@ class EventCard extends React.Component {
       <Segment attached color="teal" secondary={isHovered}>
         <Header as='h2'>
           {eventInfo.name}
-          <Divider hidden/>
           <Header.Subheader>{eventInfo.categories.map(v => v.title).join(", ")}</Header.Subheader>
           <Header.Subheader>{eventInfo.location.display_address.join(", ")}</Header.Subheader>
           <Header.Subheader>{eventInfo.display_phone}</Header.Subheader>
@@ -89,10 +106,9 @@ class EventCard extends React.Component {
   }
 
   render() {
-    const { loading, details } = this.state;
+    const { loading, details, reviewData } = this.state;
     const { eventInfo, eventDate, eventTime, deleteSelectedEvent } = this.props;
 
-    const renderedStars = this.convertRating();
     const renderedEventCard = this.getRenderedEventCard();
 
     return (
@@ -119,17 +135,25 @@ class EventCard extends React.Component {
             {renderedEventCard}
           </div>
         }>
-          <Modal.Header>{eventDate}, {eventTime}</Modal.Header>
+          <Modal.Header> 
+            <Header as='h1'>
+              <Header.Content>{eventInfo.name}</Header.Content>
+              <Header.Subheader>
+                {eventDate}, {eventTime}
+              </Header.Subheader>
+            </Header>
+          </Modal.Header>
           <Modal.Content>
             <BusinessDetail 
               loading={loading} 
-              details={details} 
+              details={details}
+              reviewData={reviewData} 
               price={
                 <Container style={{color:'green'}}>
                   {eventInfo.price}
                 </Container>
               } 
-              rating={renderedStars}
+              convertRating={this.convertRating}
             />
           </Modal.Content>
         </Modal>

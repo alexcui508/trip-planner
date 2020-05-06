@@ -119,6 +119,11 @@ class Search extends React.Component {
                   value={query}
                   placeholder={"Search"}
                   onChange={e => { this.setState({ query: e.target.value }) }} 
+                  onKeyPress={event => {
+                    if (event.key === 'Enter') {
+                      this.searchHandler();
+                    }
+                  }}
                 />
                 <Button
                   style={{ marginRight: '10px', marginTop: '10px' }}

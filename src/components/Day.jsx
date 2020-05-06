@@ -7,7 +7,7 @@ import {
 } from 'semantic-ui-react';
 import EventCard from './EventCard';
 
-class DayCard extends React.Component {
+class Day extends React.Component {
   constructor(props) {
     super(props);
 
@@ -66,9 +66,9 @@ class DayCard extends React.Component {
         <Accordion.Content active={activeIndex === 0}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={1}>
+              <Grid.Column width={2}>
               </Grid.Column>
-              <Grid.Column width={15}>
+              <Grid.Column width={12}>
                 {renderedEvents}  
               </Grid.Column>
             </Grid.Row>
@@ -79,4 +79,4 @@ class DayCard extends React.Component {
   }
 }
 
-export default DayCard;
+export default Day;

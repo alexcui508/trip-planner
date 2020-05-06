@@ -1,38 +1,28 @@
 import React from 'react';
 import { Component } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
-import { Icon } from 'semantic-ui-react';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
-let MAP_API_KEY = "pk.eyJ1IjoiYWxleGN1aSIsImEiOiJjanYzNTVsejcyY29uNDNwZml4YjZ3dHV4In0.f4di1n6PqkuH-Lksizp3-Q";
+const MyMapComponent = withGoogleMap((props) =>
+  <GoogleMap
+    defaultZoom={18}
+    defaultCenter={{ lat: props.lat, lng: props.lng }}
+  >
+    {props.isMarkerShown && <Marker position={{ lat: props.lat, lng: props.lng }} />}
+  </GoogleMap>
+);
 
 class Map extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewport: {
-        width: 400,
-        height: 400,
-        latitude: this.props.latitude,
-        longitude: this.props.longitude,
-        zoom: 16,
-      }
-    };
-  }
-
   render() {
+    const { latitude, longitude } = this.props;
     return (
-      <ReactMapGL
-        {...this.state.viewport}
-        onViewportChange={(viewport) => this.setState({ viewport })}
-        mapboxApiAccessToken={MAP_API_KEY}
-      >
-        <Marker
-          latitude={this.props.latitude}
-          longitude={this.props.longitude}
-        >
-          <Icon color='red' name='point' />
-        </Marker>
-      </ReactMapGL>
+      <MyMapComponent 
+        isMarkerShown 
+        loadingElement={<div style={{ height: `100%` }} />}
+        containerElement={<div style={{ height: `400px` }} />}
+        mapElement={<div style={{ height: `100%` }} />}
+        lat={latitude}
+        lng={longitude}
+      />
     );
   }
 }
