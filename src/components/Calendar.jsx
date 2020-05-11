@@ -6,35 +6,25 @@ import {
   Grid,
   Divider,
 } from 'semantic-ui-react';
+import { Ghost } from 'react-kawaii';
 
 class Calendar extends React.Component {
-  groupEvents = () => {
-    const { selected } = this.props;
-
-    const sortedEvents = selected.sort((event1, event2) => { return event1.date.getTime() - event2.date.getTime() });
-
-    var groupedEvents = {};
-
-    sortedEvents.forEach((event) => {
-      let eventDate = event.date.toDateString();
-      groupedEvents[eventDate] = {};
-    }); 
-
-    sortedEvents.forEach((event) => {
-      let eventDate = event.date.toDateString();
-      groupedEvents[eventDate][event.time] = event;
-    });
-
-    return groupedEvents;
-  }
-
   getRenderedDays = () => {
-    var renderedDays = [];
-    const groupedEvents = this.groupEvents();
+    const { selected, deleteSelectedEvent } = this.props;
 
-    for (const eventDate in groupedEvents) {
-      const eventsWithTimes = groupedEvents[eventDate];
-      renderedDays.push(<Day eventsWithTimes={eventsWithTimes} eventDate={eventDate} deleteSelectedEvent={this.props.deleteSelectedEvent} />);
+    var renderedDays = [];
+
+    for (const eventDate in selected) {
+      const eventsWithTimes = selected[eventDate];
+      if (Object.keys(eventsWithTimes).length > 0) {
+        renderedDays.push(
+          <Day 
+            eventsWithTimes={eventsWithTimes} 
+            eventDate={eventDate} 
+            deleteSelectedEvent={deleteSelectedEvent} 
+          />
+        );
+      }
     }
 
     return renderedDays;
@@ -86,6 +76,21 @@ class Calendar extends React.Component {
         </div>
         <Divider fitted />
         <Container style={{ 'overflowY': 'auto', 'overflowX': 'hidden', height: RESULTS_HEIGHT, paddingLeft: '20px'}}>
+          {renderedDays.length === 0 && 
+            <Container textAlign='center' style={{marginTop: '25%'}}>
+              <Ghost 
+                size={200} 
+                mood="sad" 
+                color="#E0E4E8"
+              />
+              <Header as='h1'>
+                No events so far
+                <Header.Subheader>
+                  Add an event on the right and it will show up here.
+                </Header.Subheader>
+              </Header>
+            </Container>
+          }
           {renderedDays}
         </Container>
       </Container>

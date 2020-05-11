@@ -10,7 +10,7 @@ class Planner extends React.Component {
     super(props);
 
     this.state = {
-      selectedEvents: [],
+      selectedEvents: {},
       location: {},
       dates: [],
     }
@@ -20,43 +20,32 @@ class Planner extends React.Component {
     const { selectedEvents } = this.state;
 
     const newBusiness = { business: business, date: date, time: time };
-    var existingElementIndex = -1;
-    selectedEvents.forEach((selectedEvent, i) => {
-      if (selectedEvent.date.toDateString() === date.toDateString() && selectedEvent.time === time) {
-        existingElementIndex = i;
-      }
+
+    var selectedEventsCopy = {...selectedEvents};
+    if (!selectedEvents.hasOwnProperty(date.toDateString())) {
+      selectedEventsCopy[date.toDateString()] = {};
+    } 
+    selectedEventsCopy[date.toDateString()][time] = newBusiness;
+
+    var orderedSelectedEventsCopy = {};
+    Object.keys(selectedEventsCopy).sort((date1, date2) => { return new Date(date1) - new Date(date2) }).forEach(function(key) {
+      orderedSelectedEventsCopy[key] = selectedEventsCopy[key];
     });
 
-    if (existingElementIndex > -1) {
-      var selectedEventsCopy = [...selectedEvents];
-      selectedEventsCopy[existingElementIndex] = newBusiness;
-      this.setState({
-        selectedEvents: selectedEventsCopy,
-      });
-    } else {
-      this.setState({
-        selectedEvents: [...selectedEvents, newBusiness],
-      });
-    }
+    this.setState({
+      selectedEvents: orderedSelectedEventsCopy,
+    });
   }
 
   deleteSelectedEvent = (eventDate, eventTime) => {
     const { selectedEvents } = this.state; 
 
-    var selectedEventsCopy = [...selectedEvents];
-    var indexToRemove = -1;
-    selectedEventsCopy.forEach((selectedEvent, i) => {
-      if (selectedEvent.date.toDateString() === eventDate && selectedEvent.time === eventTime) {
-        indexToRemove = i;
-      }
-    });
+    var selectedEventsCopy = {...selectedEvents};
+    delete selectedEventsCopy[eventDate][eventTime];
 
-    if (indexToRemove > -1) {
-      selectedEventsCopy.splice(indexToRemove, 1);
-      this.setState({
-        selectedEvents: selectedEventsCopy,
-      });
-    }
+    this.setState({
+      selectedEvents: selectedEventsCopy,
+    });
   }
 
   startPlan = (location, dates) => {

@@ -12,6 +12,7 @@ import {
   Loader,
 } from 'semantic-ui-react';
 import SearchResultCard from './SearchResultCard';
+import { Backpack } from 'react-kawaii';
 
 class Search extends React.Component {
   constructor(props) {
@@ -153,7 +154,18 @@ class Search extends React.Component {
         </div>
         <Divider fitted />
         {loading && renderedLoadingResults}
-        {results && results[0] && 
+        {results.length === 0 && 
+          <Container textAlign='center' style={{marginTop: '25%'}}>
+            <Backpack size={220} mood="excited" color="#00B5AD" />
+            <Header as='h1'>
+                Your search results will appear here
+                <Header.Subheader>
+                  Type a category of interest or check out what's popular.
+                </Header.Subheader>
+              </Header>
+          </Container>
+        }
+        {results.length > 0 && 
           <Container style={{ overflow: 'auto', maxHeight: RESULTS_HEIGHT, paddingTop: '10px', paddingBottom: '10px' }}>
             <Container>
               {results.map((value, i) => (
