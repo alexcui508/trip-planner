@@ -101,14 +101,10 @@ class Search extends React.Component {
         <div style={{ marginTop: '20px', marginBottom: '10px' }}>
           <Grid columns="equal">
             <Grid.Row>
-              <Grid.Column width={12}>
+              <Grid.Column>
                 <Header size="huge">
                   Things to do around {location.name}
                 </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
                 <Input 
                   style={{ marginRight: '10px', marginTop: '10px' }}
                   action={{
@@ -138,7 +134,7 @@ class Search extends React.Component {
                     }, this.searchHandler)
                   }
                 />
-                {results && results[0] &&
+                {results.length > 0 &&
                   <Button
                     style={{ marginRight: '10px', marginTop: '10px' }}
                     icon="remove circle"

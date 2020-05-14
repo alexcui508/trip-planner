@@ -1,10 +1,12 @@
 import React from 'react';
 import Day from './Day';
+import GoogleExportButton from './GoogleExportButton';
 import { 
   Header, 
   Container,
   Grid,
   Divider,
+  List,
 } from 'semantic-ui-react';
 import { Ghost } from 'react-kawaii';
 
@@ -13,14 +15,18 @@ class Calendar extends React.Component {
     const { selected, deleteSelectedEvent } = this.props;
 
     var renderedDays = [];
+    var orderedSelectedEvents = {};
+    Object.keys(selected).sort((date1, date2) => { return new Date(date1) - new Date(date2); }).forEach((date) => {
+      orderedSelectedEvents[date] = selected[date];
+    });
 
-    for (const eventDate in selected) {
-      const eventsWithTimes = selected[eventDate];
+    for (const date in orderedSelectedEvents) {
+      const eventsWithTimes = orderedSelectedEvents[date];
       if (Object.keys(eventsWithTimes).length > 0) {
         renderedDays.push(
           <Day 
             eventsWithTimes={eventsWithTimes} 
-            eventDate={eventDate} 
+            date={date} 
             deleteSelectedEvent={deleteSelectedEvent} 
           />
         );
@@ -43,6 +49,7 @@ class Calendar extends React.Component {
   }
 
   render() {
+    const { selected } = this.props;
     const renderedDays = this.getRenderedDays();
     const timeRange = this.getTimeRange();
     const RESULTS_HEIGHT = (window.innerHeight - 68).toString() + 'px';
@@ -50,26 +57,25 @@ class Calendar extends React.Component {
     return (
       <Container>
         <div style={{ marginTop: '20px', marginBottom: '10px' }}>
-          <Grid container>
+          <Grid container stackable columns="equal">
             <Grid.Row>
               <Grid.Column>
-                <Header size="huge">Your Itinerary</Header>
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={2}>
-                      <Header size="small">Start Date</Header> 
-                    </Grid.Column>
-                    <Grid.Column width={14} style={{marginBottom: '10px'}}>
-                      <Header size="small" color="grey">{timeRange.start}</Header>
-                    </Grid.Column>
-                    <Grid.Column width={2}>
-                      <Header size="small">End Date</Header> 
-                    </Grid.Column>
-                    <Grid.Column width={14}>
-                      <Header size="small" color="grey">{timeRange.end}</Header>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+                <Header size="huge">
+                  Your Itinerary
+                </Header>
+                <List>
+                  <List.Item>
+                    <List.Header size="small">Start Date</List.Header>
+                    {timeRange.start}
+                  </List.Item>
+                  <List.Item>
+                    <List.Header size="small">End Date</List.Header>
+                    {timeRange.end}
+                  </List.Item>
+                </List>
+              </Grid.Column>
+              <Grid.Column verticalAlign="bottom">
+                <GoogleExportButton selected={selected} />
               </Grid.Column>
             </Grid.Row>
           </Grid>

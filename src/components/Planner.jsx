@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 import Search from './Search';
 import { Grid } from 'semantic-ui-react'
 import StartMenu from './StartMenu';
-import { HashRouter as Router, Route } from "react-router-dom";
+import { HashRouter as Router, Route } from 'react-router-dom';
 
 class Planner extends React.Component {
   constructor(props) {
@@ -16,32 +16,36 @@ class Planner extends React.Component {
     }
   }
 
-  addBusinessToPlanner = (business, date, time) => {
+  addBusinessToPlanner = (business, date, startTime, endTime) => {
     const { selectedEvents } = this.state;
 
-    const newBusiness = { business: business, date: date, time: time };
-
     var selectedEventsCopy = {...selectedEvents};
-    if (!selectedEvents.hasOwnProperty(date.toDateString())) {
-      selectedEventsCopy[date.toDateString()] = {};
+    const dateKey = date.toDateString();
+    if (!selectedEventsCopy.hasOwnProperty(dateKey)) {
+      selectedEventsCopy[dateKey] = {};
+    }
+    if (!selectedEventsCopy[dateKey].hasOwnProperty(startTime)) {
+      selectedEventsCopy[dateKey][startTime] = {};
     } 
-    selectedEventsCopy[date.toDateString()][time] = newBusiness;
 
-    var orderedSelectedEventsCopy = {};
-    Object.keys(selectedEventsCopy).sort((date1, date2) => { return new Date(date1) - new Date(date2) }).forEach(function(key) {
-      orderedSelectedEventsCopy[key] = selectedEventsCopy[key];
-    });
+    selectedEventsCopy[dateKey][startTime][endTime] = business;
 
     this.setState({
-      selectedEvents: orderedSelectedEventsCopy,
+      selectedEvents: selectedEventsCopy,
     });
   }
 
-  deleteSelectedEvent = (eventDate, eventTime) => {
+  deleteSelectedEvent = (date, startTime, endTime) => {
     const { selectedEvents } = this.state; 
 
     var selectedEventsCopy = {...selectedEvents};
-    delete selectedEventsCopy[eventDate][eventTime];
+    delete selectedEventsCopy[date][startTime][endTime];
+    if (Object.keys(selectedEventsCopy[date][startTime]).length === 0) {
+      delete selectedEventsCopy[date][startTime];
+    }
+    if (Object.keys(selectedEventsCopy[date]).length === 0) {
+      delete selectedEventsCopy[date];
+    }
 
     this.setState({
       selectedEvents: selectedEventsCopy,

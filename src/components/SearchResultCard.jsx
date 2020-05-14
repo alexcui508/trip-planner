@@ -15,15 +15,16 @@ class SearchResultCard extends React.Component {
 
     this.state = {
       dateIndex: -1, 
-      time: '',
+      startTime: '',
+      endTime: '',
     }
   }
 
   handleSelect = (e) => {
-    const { dateIndex, time } = this.state;
+    const { dateIndex, startTime, endTime } = this.state;
     const { addBusiness, business, dates } = this.props;
 
-    addBusiness(business, dates[dateIndex], time);
+    addBusiness(business, dates[dateIndex], startTime, endTime);
   }
 
   convertRating = () => {
@@ -50,7 +51,7 @@ class SearchResultCard extends React.Component {
   }
 
   render() {
-    const { time, dateIndex } = this.state;
+    const { startTime, endTime, dateIndex } = this.state;
     const { business, dates } = this.props;
 
     const localeDates = dates.map(d => d.toLocaleDateString());
@@ -70,7 +71,8 @@ class SearchResultCard extends React.Component {
                 {business.price && 
                   <>
                     <b style={{color: "green"}}>{business.price}</b><br/>
-                    {renderedStars}
+                    {renderedStars}<br/>
+                    {business.review_count} reviews 
                   </>
                 }
                 <div style={{ position: "absolute", bottom: '0', width:"50%"}}>
@@ -80,29 +82,50 @@ class SearchResultCard extends React.Component {
                 </div>
               </div>
               <div style={{ float: "right" }}>
-                {business.review_count} reviews 
-                <br />
-                <br />
                 <Dropdown
                   placeholder='Select Date'
                   fluid
                   selection
                   options={localeDates.map((v, i) => ({ key: business.id + v, text: v, value: i }))}
                   style={{ marginBottom: "5px" }}
-                  onChange={(e, data) => this.setState({ dateIndex: data.value })}
+                  onChange={(e, data) => {
+                    if (data.value === "") {
+                      this.setState({ dateIndex: -1 });
+                    } else {
+                      this.setState({ dateIndex: data.value });
+                    }
+                  }}
+                  clearable
                 />
                 <TimeInput 
-                  name="time"
-                  value={time}
-                  onChange={(e, data) => this.setState({ time: data.value })}
+                  name="startTime"
+                  value={startTime}
+                  onChange={(e, data) => this.setState({ startTime: data.value })}
                   clearable
-                  onClear={() => {this.setState({ time: '' })}}
-                  timeFormat="AMPM"
+                  onClear={() => {this.setState({ startTime: '' })}}
+                  timeFormat="AMPM" 
                   icon={false}
-                  placeholder="Select Time"
+                  placeholder="Select Start Time"
                   style={{ marginBottom: "5px" }}
                 />
-                <Button icon color="teal" labelPosition="right" disabled={dateIndex === -1 || time === ''} onClick={this.handleSelect}>
+                <TimeInput 
+                  name="endTime"
+                  value={endTime}
+                  onChange={(e, data) => this.setState({ endTime: data.value })}
+                  clearable
+                  onClear={() => {this.setState({ endTime: '' })}}
+                  timeFormat="AMPM" 
+                  icon={false}
+                  placeholder="Select End Time"
+                  style={{ marginBottom: "5px" }}
+                />
+                <Button 
+                  icon 
+                  color="teal" 
+                  labelPosition="right" 
+                  disabled={dateIndex === -1 || startTime === '' || endTime === '' || new Date('1970/01/01 ' + startTime) >= new Date('1970/01/01 ' + endTime)} 
+                  onClick={this.handleSelect}
+                >
                   Add to plan
                   <Icon name="add"></Icon>
                 </Button>
@@ -114,6 +137,5 @@ class SearchResultCard extends React.Component {
     )
   }
 }
-
 
 export default SearchResultCard;

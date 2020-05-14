@@ -25,20 +25,33 @@ class Day extends React.Component {
   }
 
   getRenderedEvents = () => {
-    const { eventsWithTimes, eventDate, deleteSelectedEvent } = this.props;
+    const { eventsWithTimes, date, deleteSelectedEvent } = this.props;
 
-    var renderedEvents = [];
-
-    const sortedEventsWithTimes = {};
-    Object.keys(eventsWithTimes).sort((time1, time2) => {
-      return new Date('1970/01/01 ' + time1) - new Date('1970/01/01 ' + time2);
-    }).forEach((key) => {
-      sortedEventsWithTimes[key] = eventsWithTimes[key];
+    const orderedEventsWithTimes = {};
+    Object.keys(eventsWithTimes).sort((startTime1, startTime2) => {
+      return new Date('1970/01/01 ' + startTime1) - new Date('1970/01/01 ' + startTime2);
+    }).forEach((startTime) => {
+      orderedEventsWithTimes[startTime] = eventsWithTimes[startTime];
     });
 
-    for (const eventTime in sortedEventsWithTimes) {
-      const event = sortedEventsWithTimes[eventTime];
-      renderedEvents.push(<EventCard eventDate={eventDate} eventInfo={event.business} eventTime={eventTime} deleteSelectedEvent={deleteSelectedEvent} />);
+    var renderedEvents = [];
+    for (const startTime in orderedEventsWithTimes) {
+      const orderedEndTimes = Object.keys(orderedEventsWithTimes[startTime]).sort((endTime1, endTime2) => {
+        return new Date('1970/01/01 ' + endTime1) - new Date('1970/01/01 ' + endTime2);
+      });
+
+      orderedEndTimes.forEach((endTime) => {
+        const addedEvent = orderedEventsWithTimes[startTime][endTime];
+        renderedEvents.push(
+          <EventCard 
+            date={date} 
+            businessInfo={addedEvent} 
+            startTime={startTime} 
+            endTime={endTime} 
+            deleteSelectedEvent={deleteSelectedEvent} 
+          />
+        );
+      });
     }
 
     return renderedEvents;
@@ -46,7 +59,7 @@ class Day extends React.Component {
 
   render() {
     const { activeIndex } = this.state;
-    const { eventDate } = this.props;
+    const { date } = this.props;
 
     const renderedEvents = this.getRenderedEvents();
 
@@ -56,7 +69,7 @@ class Day extends React.Component {
           <Label.Group size="big">
             <Label> 
               <Icon name="dropdown"/>
-              {eventDate}
+              {date}
             </Label>
             <Label color="teal">
               {renderedEvents.length}

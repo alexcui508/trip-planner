@@ -30,12 +30,12 @@ class EventCard extends React.Component {
   }
 
   searchHandler = () => {
-    const { eventInfo } = this.props;
+    const { businessInfo } = this.props;
 
     this.setState({
       loading: true,
     }, () => {
-      fetch(this.getYelpDetailsUrl(eventInfo.id), {
+      fetch(this.getYelpDetailsUrl(businessInfo.id), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ class EventCard extends React.Component {
         });
       })
       .then(() => {
-        fetch(this.getYelpReviewsUrl(eventInfo.id), {
+        fetch(this.getYelpReviewsUrl(businessInfo.id), {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -91,15 +91,15 @@ class EventCard extends React.Component {
 
   getRenderedEventCard = () => {
     const { isHovered } = this.state;
-    const { eventInfo } = this.props;
+    const { businessInfo } = this.props;
 
     return (
       <Segment attached color="teal" secondary={isHovered}>
         <Header as='h2'>
-          {eventInfo.name}
-          <Header.Subheader>{eventInfo.categories.map(v => v.title).join(", ")}</Header.Subheader>
-          <Header.Subheader>{eventInfo.location.display_address.join(", ")}</Header.Subheader>
-          <Header.Subheader>{eventInfo.display_phone}</Header.Subheader>
+          {businessInfo.name}
+          <Header.Subheader>{businessInfo.categories.map(v => v.title).join(", ")}</Header.Subheader>
+          <Header.Subheader>{businessInfo.location.display_address.join(", ")}</Header.Subheader>
+          <Header.Subheader>{businessInfo.display_phone}</Header.Subheader>
         </Header>
       </Segment>
     );
@@ -107,7 +107,7 @@ class EventCard extends React.Component {
 
   render() {
     const { loading, details, reviewData } = this.state;
-    const { eventInfo, eventDate, eventTime, deleteSelectedEvent } = this.props;
+    const { businessInfo, date, startTime, endTime, deleteSelectedEvent } = this.props;
 
     const renderedEventCard = this.getRenderedEventCard();
 
@@ -117,9 +117,9 @@ class EventCard extends React.Component {
           <Header as='h1' attached='top'>
             <Grid columns="equal">
               <Grid.Row>
-                <Grid.Column>{eventTime}</Grid.Column>
+                <Grid.Column>{startTime} - {endTime}</Grid.Column>
                 <Grid.Column textAlign="right" style={{marginRight: '-10px'}}>
-                  <Icon link name="delete" color="red" onClick={() => {deleteSelectedEvent(eventDate, eventTime)}}/>
+                  <Icon link name="delete" color="red" onClick={() => { deleteSelectedEvent(date, startTime, endTime) }}/>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -137,9 +137,9 @@ class EventCard extends React.Component {
         }>
           <Modal.Header> 
             <Header as='h1'>
-              <Header.Content>{eventInfo.name}</Header.Content>
+              <Header.Content>{businessInfo.name}</Header.Content>
               <Header.Subheader>
-                {eventDate}, {eventTime}
+                {date}, {startTime} - {endTime}
               </Header.Subheader>
             </Header>
           </Modal.Header>
@@ -150,7 +150,7 @@ class EventCard extends React.Component {
               reviewData={reviewData} 
               price={
                 <Container style={{color:'green'}}>
-                  {eventInfo.price}
+                  {businessInfo.price}
                 </Container>
               } 
               convertRating={this.convertRating}
