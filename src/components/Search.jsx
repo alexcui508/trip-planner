@@ -150,7 +150,7 @@ class Search extends React.Component {
         </div>
         <Divider fitted />
         {loading && renderedLoadingResults}
-        {results.length === 0 && 
+        {results.length === 0 && !loading && 
           <Container textAlign='center' style={{marginTop: '25%'}}>
             <Backpack size={220} mood="excited" color="#00B5AD" />
             <Header as='h1'>
